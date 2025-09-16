@@ -17,6 +17,7 @@
 - **Session-Based:** maintain multiple work sessions and contexts per project
 - **LSP-Enhanced:** Crush uses LSPs for additional context, just like you do
 - **Extensible:** add capabilities via MCPs (`http`, `stdio`, and `sse`)
+- **Interactive Playground:** built-in code editor with execution capabilities for Go, JavaScript, and Python
 - **Works Everywhere:** first-class support in every terminal on macOS, Linux, Windows (PowerShell and WSL), FreeBSD, OpenBSD, and NetBSD
 
 ## Installation
@@ -135,6 +136,22 @@ That said, you can also set environment variables for preferred providers.
 | `AZURE_OPENAI_ENDPOINT`    | Azure OpenAI models                                |
 | `AZURE_OPENAI_API_KEY`     | Azure OpenAI models (optional when using Entra ID) |
 | `AZURE_OPENAI_API_VERSION` | Azure OpenAI models                                |
+
+Once you've set up your API keys, you can start Crush by simply running:
+
+```bash
+blush
+```
+
+After starting, you can access the interactive playground with `Ctrl+Shift+P` from within the TUI.
+
+### By the Way
+
+Is there a provider you'd like to see in Crush? Is there an existing model that needs an update?
+
+Crush's default model listing is managed in [Catwalk](https://github.com/charmbracelet/catwalk), a community-supported, open source repository of Crush-compatible models, and you're welcome to contribute.
+
+<a href="https://github.com/charmbracelet/catwalk"><img width="174" height="174" alt="Catwalk Badge" src="https://github.com/user-attachments/assets/95b49515-fe82-4409-b10d-5beb0873787d" /></a>
 
 ### By the Way
 
@@ -316,6 +333,35 @@ Local models can also be configured via OpenAI-compatible API. Here are two comm
     }
   }
 }
+```
+
+## Interactive Playground
+
+Blush includes an interactive code playground directly within the TUI, allowing you to experiment with code without leaving the application. Access the playground with `Ctrl+Shift+P`.
+
+The playground features:
+- A built-in code editor with syntax highlighting
+- Support for multiple programming languages (Go, JavaScript, Python)
+- In-app code execution with isolated environments
+- Real-time output display with scrolling capabilities
+- Language switching on-the-fly
+
+Key bindings in the playground:
+- `Ctrl+E`: Focus editor
+- `Ctrl+O`: Focus output panel
+- `Ctrl+R`: Run code
+- `Tab`: Toggle focus between editor and output
+- `Ctrl+L`: Change programming language
+
+The playground provides a safe environment for testing code snippets with proper isolation and resource limits.
+
+### Standalone Playground
+
+The playground can also be run as a standalone application:
+
+```bash
+cd playground
+go run main.go
 ```
 
 ### Custom Providers
