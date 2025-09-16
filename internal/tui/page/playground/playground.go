@@ -10,5 +10,5 @@ var PlaygroundPageID page.PageID = "playground"
 
 // New creates a new playground page
 func New() *playground.Model {
-	return playground.New()
+	return playground.New("")
 }

@@ -38,8 +38,8 @@ func DefaultKeyMap() KeyMap {
 			key.WithHelp("ctrl+s", "sessions"),
 		),
 		Playground: key.NewBinding(
-			key.WithKeys("ctrl+shift+p"),
-			key.WithHelp("ctrl+shift+p", "playground"),
+			key.WithKeys("ctrl+k"),
+			key.WithHelp("ctrl+k", "playground"),
 		),
 	}
 }

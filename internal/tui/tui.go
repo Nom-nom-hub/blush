@@ -341,6 +341,7 @@ func (a *appModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return a, tea.Batch(cmds...)
 	}
+
 	s, _ := a.status.Update(msg)
 	a.status = s.(status.StatusCmp)
 
@@ -482,7 +483,17 @@ func (a *appModel) handleKeyPressMsg(msg tea.KeyPressMsg) tea.Cmd {
 		)
 		return tea.Sequence(cmds...)
 	case key.Matches(msg, a.keyMap.Playground):
-		return a.moveToPage(playgroundPage.PlaygroundPageID)
+		// Toggle between chat and playground
+		if a.currentPage == playgroundPage.PlaygroundPageID {
+			// Currently in playground, switch to chat
+			return a.moveToPage("chat")
+		} else {
+			// Currently in chat, switch to playground
+			// When entering the playground, set the return page to the current page
+			playgroundModel := playgroundCmp.New(a.currentPage)
+			a.pages[playgroundPage.PlaygroundPageID] = playgroundModel
+			return a.moveToPage(playgroundPage.PlaygroundPageID)
+		}
 	case key.Matches(msg, a.keyMap.Suspend):
 		if a.app.CoderAgent != nil && a.app.CoderAgent.IsBusy() {
 			return util.ReportWarn("Agent is busy, please wait...")
@@ -618,8 +629,8 @@ func New(app *app.App) tea.Model {
 		keyMap:      keyMap,
 
 		pages: map[page.PageID]util.Model{
-			chat.ChatPageID: chatPage,
-					playgroundPage.PlaygroundPageID: playgroundCmp.New(),
+			chat.ChatPageID:              chatPage,
+			playgroundPage.PlaygroundPageID: playgroundCmp.New(""),
 		},
 
 		dialog:      dialogs.NewDialogCmp(),

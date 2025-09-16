@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Create a new playground model
-	model := playground.New()
+	model := playground.New("")
 	
 	// Set a reasonable size for testing
 	model.SetSize(100, 30)

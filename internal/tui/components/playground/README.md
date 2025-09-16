@@ -80,6 +80,7 @@ The `playground` component uses the following key bindings:
 - `ctrl+r`: `RunCode` - Execute the code in the editor.
 - `tab`: `ToggleFocus` - Toggle focus between the editor and output panels.
 - `ctrl+l`: `ChangeLanguage` - Cycle through supported programming languages.
+- `ctrl+k`: `Playground` - Access the playground (when not already in the playground).
 
 ### Editor Keymap (`editorKeyMap`)
 

@@ -143,7 +143,7 @@ Once you've set up your API keys, you can start Crush by simply running:
 blush
 ```
 
-After starting, you can access the interactive playground with `Ctrl+Shift+P` from within the TUI.
+After starting, you can access the interactive playground with `Ctrl+K` from within the TUI.
 
 ### By the Way
 

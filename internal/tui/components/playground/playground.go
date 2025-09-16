@@ -9,19 +9,42 @@ import (
 	"github.com/charmbracelet/bubbles/v2/textarea"
 	tea "github.com/charmbracelet/bubbletea/v2"
 	"github.com/charmbracelet/lipgloss/v2"
+	"github.com/nom-nom-hub/blush/internal/tui/page"
 	"github.com/nom-nom-hub/blush/internal/tui/styles"
 )
 
+// ExitMsg is sent when the user wants to exit the playground
+type ExitMsg struct{
+	// ReturnToPage specifies which page to return to after exiting the playground
+	ReturnToPage page.PageID
+}
+
+// Init implements tea.Model for ExitMsg
+func (e ExitMsg) Init() tea.Cmd {
+	return nil
+}
+
+// Update implements tea.Model for ExitMsg
+func (e ExitMsg) Update(tea.Msg) (tea.Model, tea.Cmd) {
+	return e, nil
+}
+
+// View implements tea.Model for ExitMsg
+func (e ExitMsg) View() string {
+	return ""
+}
+
 // Model represents the playground component state
 type Model struct {
-	width     int
-	height    int
-	editor    *textarea.Model
-	output    outputModel
-	focus     focusState
-	executing bool
-	language  string
-	executor  *Executor
+	width      int
+	height     int
+	editor     *textarea.Model
+	output     outputModel
+	focus      focusState
+	executing  bool
+	language   string
+	executor   *Executor
+	returnPage page.PageID // The page to return to when exiting the playground
 }
 
 // focusState represents which panel currently has focus
@@ -33,7 +56,7 @@ const (
 )
 
 // New creates a new playground model
-func New() *Model {
+func New(returnPage page.PageID) *Model {
 	ta := textarea.New()
 	ta.Placeholder = "Enter your code here..."
 	ta.Focus()
@@ -41,11 +64,12 @@ func New() *Model {
 	output := newOutputModel()
 	
 	return &Model{
-		editor:   ta,
-		output:   output,
-		focus:    editorFocus,
-		language: "go", // Default to Go
-		executor: NewExecutor(),
+		editor:     ta,
+		output:     output,
+		focus:      editorFocus,
+		language:   "go", // Default to Go
+		executor:   NewExecutor(),
+		returnPage: returnPage,
 	}
 }
 
@@ -61,7 +85,7 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "esc":
+		case "ctrl+c":
 			return m, tea.Quit
 		case "ctrl+e":
 			m.focus = editorFocus
@@ -92,6 +116,9 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.output.content = append(m.output.content, fmt.Sprintf("Error: %s", string(msg)))
 		m.executing = false
 		return m, nil
+	case ExitMsg:
+		// Propagate ExitMsg
+		return msg, nil
 	}
 
 	// Update the focused component
